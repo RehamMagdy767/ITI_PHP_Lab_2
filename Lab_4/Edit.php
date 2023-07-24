@@ -47,27 +47,19 @@ if(isset($_POST['submit']))
     $confirmPassword = $_POST['confirmPassword'];
     $roomNumber = $_POST['roomNumber'];
     
-    // check if a file was uploaded
     if(isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        // get the name of the uploaded file
         $imgName = $_FILES['image']['name'];
-        
-        // generate a unique name for the uploaded file
         $imgNewName = uniqid() . '_' . $imgName;
-        
-        // move the uploaded file to the target directory
+
         move_uploaded_file($_FILES['image']['tmp_name'], 'upload/' . $imgNewName);
     } else {
-        // no file was uploaded, use the existing profile picture name
         $imgNewName = $_POST['profilePicture'];
     }
     
-    // update the user data in the database
     $stmt = $mysqli->prepare("UPDATE User SET Email=?, Password=?, ConfirmPassword=?, RoomNumber=?, ProfilePicture=? WHERE Name=?");
     $stmt->bind_param("ssssss", $email, $password, $confirmPassword, $roomNumber, $imgNewName, $name);
     $stmt->execute();
     
-    // redirect to the table page
     header('location:Table.php');
 }
 ?>
