@@ -38,7 +38,7 @@ if (isset($_GET['Name'])) {
            
             echo "Name:<input type='text' name='name' value='$name'><br><br><br>";
             echo "Email:<input type='text' name='email' value='$email'><br><br><br>";
-            echo "Password:<input type='password' name='password' pattern='[a-z0-9_]{1,8}' title='Password must be only lowercase letters, digits, and underscores, and no more than 8 characters long.' required";
+            echo "Password:<input type='password' name='password' pattern='[a-z0-9_]{1,8}' title='Password must be only lowercase letters, digits, and underscores, and no more than 8 characters long.'value='$password' required";
             if (!empty($passwordError)) {
                 echo " style='border-color: red'";
             }
@@ -63,7 +63,6 @@ if (isset($_GET['Name'])) {
                 echo "<input type='hidden' name='profilePicture' value='$profilePicture'>";
             }
             
-            // Add this line to store the existing password value
             echo "<input type='hidden' name='existingPassword' value='$password'>";
             
             echo "<button type='submit' name='submit' style='background-color: brown; height: 30px;'><a style='text-decoration:none; color:black; margin:20px'>Submit</a></button>";
@@ -80,18 +79,27 @@ if (isset($_POST['submit'])) {
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
     $roomNumber = $_POST['roomNumber'];
+    $profilePicture = $imgNewName;
     
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
         $imgName = $_FILES['image']['name'];
-        $imgNewName = uniqid() . '_' . $imgName;
-        move_uploaded_file($_FILES['image']['tmp_name'], 'image/' . $imgNewName);
-        
-        // Add the image name to the "ProfilePicture" column in the database
-        $imgNewName = 'image/' . $imgNewName;
+        $ext = pathinfo($imgName)['extension'];
+        $imgTmpName = $_FILES['image']['tmp_name'];
+        $allowedTypes = array('jpg', 'jpeg', 'png', 'gif');
+        $fileType = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $imgNewName = "images/".time().".".$ext;
+        if (!in_array($fileType, $allowedTypes))
+        {
+            $errors['profilePicture'] = 'Invalid file type';
+        }
+        else {
+            $profilePicture = $_FILES['profilePicture']['name'];
+            move_uploaded_file($imgTmpName, $imgNewName);
+        }
     } else {
         $imgNewName = $_POST['profilePicture'];
     }
-    
+
     $passwordError = $confirmPasswordError = '';
     $existingPassword = $_POST['existingPassword'];
     if ($password != $confirmPassword || $password != $existingPassword) {
