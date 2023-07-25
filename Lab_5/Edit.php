@@ -57,7 +57,6 @@ if ($result->num_rows > 0) {
             echo "Current Profile Picture: $profilePicture<br><br>";
             echo "<input type='hidden' name='profilePicture' value='$profilePicture'>";
         } else {
-            // Set $profilePicture to the existing value retrieved from the database
             echo "<input type='hidden' name='profilePicture' value='{$row['ProfilePicture']}'>";
         }
 

@@ -60,7 +60,7 @@ class Database {
                     $imgTmpName = $image['tmp_name'];
                     $ext = pathinfo($imgName)['extension'];
                     $imgNewName = "images/" . time() . ".$ext";
-                    if (in_array($ext, array('png', 'jpg', 'jpeg'))) 
+                    if (in_array($ext, array('jpg', 'jpeg', 'png', 'gif'))) 
                     {
                         move_uploaded_file($imgTmpName, $imgNewName);
                         $sql .= "$columns[$i] = '$imgNewName'";
@@ -68,7 +68,6 @@ class Database {
                 }
                 else 
                 {
-                    // If $image is empty, update the record with the existing profile picture value
                     $sql .= "$columns[$i] = '$values[$i]'";
                 }
             } 
