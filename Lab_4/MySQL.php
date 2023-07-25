@@ -17,6 +17,8 @@
     //     echo "Table created successfully";
     // } else {
     //     echo "Error creating table: " . $mysqli->error;
+    //
     // }
+
     
 ?>  
